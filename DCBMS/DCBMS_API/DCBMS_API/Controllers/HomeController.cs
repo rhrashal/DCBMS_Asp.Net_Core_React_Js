@@ -16,9 +16,11 @@ namespace DCBMS_API.Controllers
     public class HomeController : ControllerBase
     {
         private readonly ITestTypeRepository _testType;
-        public HomeController(ITestTypeRepository testType)
+        private readonly ITestRepository _test;
+        public HomeController(ITestTypeRepository testType, ITestRepository test)
         {
             _testType = testType;
+            _test = test;
         }
 
         #region TestType
@@ -68,5 +70,51 @@ namespace DCBMS_API.Controllers
         }
         #endregion
 
+        #region Test
+        [Route("GetTestList")]
+        [HttpGet]
+        public async Task<ActionResult<Response>> GetTestList()
+        {
+            Response res = new Response();
+            res.results = await _test.GetAllTest();
+            return res;
+        }
+
+        [Route("AddTest")]
+        [HttpPost]
+        public async Task<ActionResult<Response>> AddTest(Test test)
+        {
+            Response res = new Response();
+            if (ModelState.IsValid)
+            {
+                res.results = await _test.AddTest(test);
+            }
+            return res;
+        }
+
+        [Route("EditTest")]
+        [HttpPut]
+        public async Task<ActionResult<Response>> EditTestType(Test test)
+        {
+            Response res = new Response();
+            if (ModelState.IsValid)
+            {
+                res.results = await _test.UpdateTest(test);
+            }
+            return res;
+        }
+
+        [Route("DeleteTest")]
+        [HttpDelete]
+        public async Task<ActionResult<Response>> DeleteTest(int testId)
+        {
+            Response res = new Response();
+            if (testId > 0)
+            {
+                res.results = await _test.DeleteTest(testId);
+            }
+            return res;
+        }
+        #endregion
     }
 }

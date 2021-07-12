@@ -102,6 +102,7 @@ namespace DCBMS_API
 
 
             services.AddScoped(typeof(ITestTypeRepository), typeof(TestTypeRepository));
+            services.AddScoped(typeof(ITestRepository), typeof(TestRepository));
             //services.AddScoped(typeof(IExamRoutineRepository), typeof(ExamRoutineRepository));
         }
 

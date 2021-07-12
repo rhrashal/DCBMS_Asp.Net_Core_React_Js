@@ -11,6 +11,7 @@ namespace DCBMS_API.Models
     {
         public int Id { get; set; }
         public string TestName { get; set; }
+        public decimal Fee { get; set; }
         [Required]
         [ForeignKey("TestType")]
         public int TestTypeId { get; set; }

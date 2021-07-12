@@ -9,36 +9,36 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DCBMS_API.Repository
 {
-    public class TestTypeRepository : ITestTypeRepository
+    public class TestRepository : ITestRepository
     {
         ApplicationDbContext _context;
-        public TestTypeRepository(ApplicationDbContext context)
+        public TestRepository(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        public async Task<List<TestType>> GetAllTestTypes()
+        public async Task<List<Test>> GetAllTest()
         {
             if (_context != null)
             {
-                return await _context.TestTypes.ToListAsync();
+                return await _context.Tests.ToListAsync();
             }
 
             return null;
         }
 
-        public async Task<TestType> GetTestType(int? id)
+        public async Task<Test> GetTest(int? id)
         {
-            return await _context.TestTypes.FindAsync(id);
+            return await _context.Tests.FindAsync(id);
         }
 
-        public async Task<string> AddTestType(TestType testType)
+        public async Task<string> AddTest(Test test)
         {
-            if (testType != null)
+            if (test != null)
             {
-                if (!_context.TestTypes.Any(e => e.TestTypeName == testType.TestTypeName))
+                if (!_context.Tests.Any(e => e.TestName == test.TestName))
                 {
-                    await _context.TestTypes.AddAsync(testType);
+                    await _context.Tests.AddAsync(test);
                     await _context.SaveChangesAsync();
                     return Constant.SAVED;
                 }
@@ -50,13 +50,13 @@ namespace DCBMS_API.Repository
             return Constant.INVAILD_DATA;
         }
 
-        public async Task<string> UpdateTestType(TestType testType)
+        public async Task<string> UpdateTest(Test test)
         {
-            if (testType != null)
+            if (test != null)
             {
-                if (_context.TestTypes.Any(e => e.Id == testType.Id))
+                if (_context.Tests.Any(e => e.Id == test.Id))
                 {
-                     _context.TestTypes.Update(testType);
+                     _context.Tests.Update(test);
                     await _context.SaveChangesAsync();
                     return Constant.UPDATED;
                 }
@@ -68,17 +68,17 @@ namespace DCBMS_API.Repository
             return Constant.INVAILD_DATA;
         }
 
-        public async Task<string> DeleteTestType(int id)
+        public async Task<string> DeleteTest(int id)
         {
             if (id >0 ) 
             {
 
-                var testType = await _context.TestTypes.FindAsync(id);
+                var test = await _context.Tests.FindAsync(id);
 
-                if (testType != null)
+                if (test != null)
                 {
 
-                    _context.TestTypes.Remove(testType);
+                    _context.Tests.Remove(test);
                     await _context.SaveChangesAsync();
                     return Constant.DELETED;
                 }
