@@ -57,6 +57,7 @@ namespace DCBMS_API.Data
 
         public virtual DbSet<TestType> TestTypes { get; set; }
         public virtual DbSet<Test> Tests { get; set; }
+        public virtual DbSet<Patient> Patients { get; set; }
         public virtual DbSet<ApplicationRole> ApplicationRole { get; set; }
         public virtual DbSet<ApplicationUserRole> ApplicationUserRole { get; set; }
     }
