@@ -19,58 +19,69 @@ namespace DCBMS_API.Repository
 
         public async Task<PatientVM> AddPatientRequest(PatientVM data)
         {
-            try
+            using (var transaction = _context.Database.BeginTransaction())
             {
-                List<TestRequest> requestList = new List<TestRequest>();
-
-                Patient patient = new Patient();
-
-                patient.PatientName = data.PatientName;
-                patient.DateOfBirth = data.DateOfBirth;
-                patient.Mobile = data.Mobile;
-                patient.TestDate = DateTime.Now;
-                patient.BillNo = data.PatientName.Substring(0,3) + DateTime.Now.Minute + DateTime.Now.Hour+DateTime.Now.Day+ DateTime.Now.Month+ DateTime.Now.Year;
-                patient.IsPaid = false;
-                patient.Status = "Unpaid";
-
-                await _context.Patients.AddAsync(patient);
-                //await _context.SaveChangesAsync();
-
-                if (patient.Id>0 && data.TestRequestList.Count>0)
+                try
                 {
+                    List<TestRequest> requestList = new List<TestRequest>();
+
+                    Patient patient = new Patient();
+                    decimal totalAmount = 0;
                     foreach (var item in data.TestRequestList)
                     {
-                        TestRequest request = new TestRequest();
-                        request.PatientId = patient.Id;
-                        request.TestId = item.TestId;
-                        request.PayableAmount = item.PayableAmount;
-                        requestList.Add(request);
+                        totalAmount = totalAmount + item.PayableAmount;
                     }
-                    await _context.TestRequests.AddRangeAsync(requestList);
-                    await _context.SaveChangesAsync();                    
-                }
 
-                var requestRes = _context.TestRequests.Where(e => e.PatientId == patient.Id).ToList();
-                foreach (var item in requestRes)
+                    patient.PatientName = data.PatientName;
+                    patient.DateOfBirth = data.DateOfBirth;
+                    patient.Mobile = data.Mobile;
+                    patient.TestDate = DateTime.Now;
+                    patient.BillNo = data.PatientName.Substring(0, 3) + DateTime.Now.Minute + DateTime.Now.Hour + DateTime.Now.Day + DateTime.Now.Month + DateTime.Now.Year;
+                    patient.IsPaid = false;
+                    patient.Status = "Unpaid";
+                    patient.TotalAmount = totalAmount;
+
+
+                    await _context.Patients.AddAsync(patient);
+                    await _context.SaveChangesAsync();
+
+                    if (patient.Id > 0 && data.TestRequestList.Count > 0)
+                    {
+                        foreach (var item in data.TestRequestList)
+                        {
+                            TestRequest request = new TestRequest();
+                            request.PatientId = patient.Id;
+                            request.TestId = item.TestId;
+                            request.PayableAmount = item.PayableAmount;
+                            requestList.Add(request);
+                        }
+                        await _context.TestRequests.AddRangeAsync(requestList);
+                        await _context.SaveChangesAsync();
+                        transaction.Commit();
+                    }
+                    var requestRes = _context.TestRequests.Where(e => e.PatientId == patient.Id).ToList();
+                    foreach (var item in requestRes)
+                    {
+                        item.TestName = item.Test.TestTypeName;
+                    }
+                    PatientVM res = new PatientVM();
+                    res.PatientName = patient.PatientName;
+                    res.DateOfBirth = patient.DateOfBirth;
+                    res.Mobile = patient.Mobile;
+                    res.TestDate = patient.TestDate;
+                    res.BillNo = patient.BillNo;
+                    res.IsPaid = patient.IsPaid;
+                    res.Status = patient.Status;
+                    res.Id = patient.Id;
+                    res.TestRequestList = requestRes;
+
+                    return res;
+                }
+                catch (Exception ex)
                 {
-                    item.TestName = item.Test.TestTypeName;
+                    transaction.Rollback();
+                    throw new Exception(ex.Message);
                 }
-                PatientVM res = new PatientVM();
-                res.PatientName = patient.PatientName;
-                res.DateOfBirth = patient.DateOfBirth;
-                res.Mobile = patient.Mobile;
-                res.TestDate = patient.TestDate;
-                res.BillNo = patient.BillNo;
-                res.IsPaid = patient.IsPaid;
-                res.Status = patient.Status;
-                res.Id = patient.Id;
-                res.TestRequestList = requestRes;
-
-                return res;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
             }
         }
 

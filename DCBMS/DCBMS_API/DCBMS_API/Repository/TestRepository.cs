@@ -21,7 +21,7 @@ namespace DCBMS_API.Repository
         {
             if (_context != null)
             {
-                var testList  = await _context.Tests.ToListAsync();
+                var testList  = await _context.Tests.Include(e=>e.TestType).ToListAsync();
                 foreach (var item in testList)
                 {
                     item.TestTypeName = item.TestType.TestTypeName;
