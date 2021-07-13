@@ -22,10 +22,9 @@ namespace DCBMS_API.Repository
             if (_context != null)
             {
                 var testList  = await _context.Tests.ToListAsync();
-                var testTypeList  = await _context.TestTypes.ToListAsync();
                 foreach (var item in testList)
                 {
-                    item.TestTypeName = testTypeList.Where(e => e.Id == item.TestTypeId).FirstOrDefault().TestTypeName;
+                    item.TestTypeName = item.TestType.TestTypeName;
                 }
                 return testList;
             }

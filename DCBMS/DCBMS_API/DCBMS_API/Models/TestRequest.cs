@@ -20,6 +20,9 @@ namespace DCBMS_API.Models
         public virtual Test Test { get; set; }
 
         public decimal PayableAmount { get; set; }
+        [NotMapped]
+        public string TestName { get; set; }
+
 
     }
 }

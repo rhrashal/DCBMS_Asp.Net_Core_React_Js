@@ -35,29 +35,14 @@ namespace DCBMS_API.Data
                     .HasForeignKey(ur => ur.UserId)
                     .IsRequired();
             });
-
-
-            // https://eamonkeane.dev/computed-columns-in-entity-framework-core/
-            // Create Full Name with Is Persisted YES
-            //builder.Entity<Student>()
-            //    .Property(s => s.FullName)
-            //    .HasComputedColumnSql("[FirstName] + ' ' + [LastName]PERSISTED");
-
-
+            //-https://eamonkeane.dev/computed-columns-in-entity-framework-core/
             //Note-https://www.learnentityframeworkcore.com/configuration/fluent-api/ondelete-method
-
-            //builder.Entity<Staff>()
-            //   .HasOne(b => b.PostOffice)
-            //   .WithMany(a => a.Staff)
-            //   .OnDelete(DeleteBehavior.Restrict);
-
-   
-
         }
 
         public virtual DbSet<TestType> TestTypes { get; set; }
         public virtual DbSet<Test> Tests { get; set; }
         public virtual DbSet<Patient> Patients { get; set; }
+        public virtual DbSet<TestRequest> TestRequests { get; set; }
         public virtual DbSet<ApplicationRole> ApplicationRole { get; set; }
         public virtual DbSet<ApplicationUserRole> ApplicationUserRole { get; set; }
     }

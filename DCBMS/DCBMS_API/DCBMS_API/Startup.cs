@@ -103,7 +103,7 @@ namespace DCBMS_API
 
             services.AddScoped(typeof(ITestTypeRepository), typeof(TestTypeRepository));
             services.AddScoped(typeof(ITestRepository), typeof(TestRepository));
-            //services.AddScoped(typeof(IExamRoutineRepository), typeof(ExamRoutineRepository));
+            services.AddScoped(typeof(IPaitentRepository), typeof(PaitentRepository));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
