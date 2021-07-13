@@ -13,6 +13,8 @@ namespace DCBMS_API.Interface
 
         Task<PatientVM> AddPatientRequest(PatientVM data);
 
-        Task<List<TestWiseReportVM>> testWiseReport(FilterVM filter);
+        Task<List<TestWiseReportVM>> TestWiseReport(FilterVM filter);
+        Task<List<TypeWiseReportVM>> TypeWiseReport(FilterVM filter);
+        Task<List<Patient>> UnPaidBillReport(FilterVM filter);
     }
 }

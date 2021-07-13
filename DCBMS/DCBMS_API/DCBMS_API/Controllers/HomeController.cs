@@ -162,7 +162,25 @@ namespace DCBMS_API.Controllers
         public async Task<ActionResult<Response>> TestWiseReport(FilterVM filter)
         {
             Response res = new Response();
-            res.results = await _patient.testWiseReport(filter);
+            res.results = await _patient.TestWiseReport(filter);
+            return res;
+        }
+
+        [Route("TypeWiseReport")]
+        [HttpGet]
+        public async Task<ActionResult<Response>> TypeWiseReport(FilterVM filter)
+        {
+            Response res = new Response();
+            res.results = await _patient.TypeWiseReport(filter);
+            return res;
+        }
+
+        [Route("UnPaidBillReport")]
+        [HttpGet]
+        public async Task<ActionResult<Response>> UnPaidBillReport(FilterVM filter)
+        {
+            Response res = new Response();
+            res.results = await _patient.UnPaidBillReport(filter);
             return res;
         }
 

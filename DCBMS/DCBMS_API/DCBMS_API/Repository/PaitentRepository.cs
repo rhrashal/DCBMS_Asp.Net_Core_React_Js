@@ -119,7 +119,7 @@ namespace DCBMS_API.Repository
             return patient;
         }
 
-        public async Task<List<TestWiseReportVM>> testWiseReport(FilterVM filter)
+        public async Task<List<TestWiseReportVM>> TestWiseReport(FilterVM filter)
         {
             try
             {
@@ -153,6 +153,61 @@ namespace DCBMS_API.Repository
             
 
             
+        }
+
+        public async Task<List<TypeWiseReportVM>> TypeWiseReport(FilterVM filter)
+        {
+            try
+            {
+                DateTime fromDate = Convert.ToDateTime(filter.FromDate);
+                DateTime toDate = Convert.ToDateTime(filter.ToDate);
+                List<TypeWiseReportVM> response = new List<TypeWiseReportVM>();
+                List<TestRequest> testRequestList = new List<TestRequest>();
+
+                var patientList = await _context.Patients.Where(e => e.TestDate.Date >= fromDate.Date && e.TestDate.Date <= toDate.Date && e.IsPaid == true).ToListAsync();
+                foreach (var item in patientList)
+                {
+                    var requestList = await _context.TestRequests.Where(e => e.PatientId == item.Id).ToListAsync();
+                    testRequestList.AddRange(requestList);
+                }
+                var testTypeList = await _context.TestTypes.ToListAsync();
+                var testList = await _context.Tests.ToListAsync();
+                foreach (var item in testTypeList)
+                {
+                    TypeWiseReportVM rpt = new TypeWiseReportVM();
+                    rpt.TestTypeId = item.Id;
+                    rpt.TestTypeName = item.TestTypeName;
+
+                    //sub loop
+                    int no = 0;
+                    decimal amount = 0;
+                    var testFlt = testList.Where(e => e.TestTypeId == item.Id).ToList();
+                    foreach (var p in testFlt)
+                    {
+                        no = no + testRequestList.Where(e => e.TestId == p.Id).ToList().Count();
+                        amount = amount + testRequestList.Where(e => e.TestId == p.Id).ToList().Sum(e => e.PayableAmount);
+                    }
+
+                    rpt.NoOfTest = no;
+                    rpt.TotalAmount = amount;
+
+                    response.Add(rpt);
+                }
+                return response;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<List<Patient>> UnPaidBillReport(FilterVM filter)
+        {
+            List<Patient> patientList = new List<Patient>();
+            DateTime fromDate = Convert.ToDateTime(filter.FromDate);
+            DateTime toDate = Convert.ToDateTime(filter.ToDate);
+            patientList = await _context.Patients.Where(e => e.TestDate.Date >= fromDate.Date && e.TestDate.Date <= toDate.Date && e.IsPaid == false).ToListAsync();
+            return patientList;
         }
 
 

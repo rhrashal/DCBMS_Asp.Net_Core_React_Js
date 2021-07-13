@@ -13,4 +13,13 @@ namespace DCBMS_API.Models.ViewModel
         public decimal TotalAmount { get; set; }
 
     }
+
+    public class TypeWiseReportVM
+    {
+        public int TestTypeId { get; set; }
+        public string TestTypeName { get; set; }
+        public int NoOfTest { get; set; }
+        public decimal TotalAmount { get; set; }
+
+    }
 }
