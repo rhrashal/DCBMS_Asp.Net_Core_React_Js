@@ -29,12 +29,12 @@ namespace DCBMS_API.Controllers
 
         [Route("AddPatientRequest")]
         [HttpPost]
-        public async Task<ActionResult<Response>> AddTest(PatientVM test)
+        public async Task<ActionResult<Response>> AddTest(PatientVM patient)
         {
             Response res = new Response();
-            if (ModelState.IsValid)
+            if (patient != null && patient.TestRequestList.Count > 0)
             {
-                res.results = await _test.AddTest(test);
+                res.results = await _patient.AddPatientRequest(patient);
             }
             return res;
         }
