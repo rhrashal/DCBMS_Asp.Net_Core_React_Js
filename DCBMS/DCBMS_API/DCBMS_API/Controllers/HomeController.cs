@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using DCBMS_API.Interface;
 using DCBMS_API.Models;
+using DCBMS_API.Models.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -26,6 +27,26 @@ namespace DCBMS_API.Controllers
         }
 
         #region Patient
+
+        [Route("BillPay")]
+        [HttpGet]
+        public async Task<ActionResult<Response>> ScerchBill(int Id)
+        {
+            Response res = new Response();
+            res.results = await _patient.ProcessPay(Id);
+            return res;
+        }
+
+
+        [Route("ScerchBill")]
+        [HttpGet]
+        public async Task<ActionResult<Response>> ScerchBill(ScerchVM filterVM)
+        {
+            Response res = new Response();
+            res.results = await _patient.GetPatient(filterVM);
+            return res;
+        }
+
 
         [Route("AddPatientRequest")]
         [HttpPost]
@@ -133,6 +154,18 @@ namespace DCBMS_API.Controllers
             }
             return res;
         }
+        #endregion
+
+        #region Report
+        [Route("TestWiseReport")]
+        [HttpGet]
+        public async Task<ActionResult<Response>> TestWiseReport(FilterVM filter)
+        {
+            Response res = new Response();
+            res.results = await _patient.testWiseReport(filter);
+            return res;
+        }
+
         #endregion
     }
 }

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using DCBMS_API.Data;
 using DCBMS_API.Interface;
 using DCBMS_API.Models;
+using DCBMS_API.Models.ViewModel;
 using Microsoft.EntityFrameworkCore;
 
 namespace DCBMS_API.Repository
@@ -17,6 +18,21 @@ namespace DCBMS_API.Repository
             _context = context;
         }
 
+        public async Task<Patient> GetPatient(ScerchVM filterVM)
+        {
+            if (filterVM != null)
+            {
+                if ( !String.IsNullOrEmpty( filterVM.BillNo))
+                {
+                    return await _context.Patients.Where(e => e.BillNo == filterVM.BillNo).FirstOrDefaultAsync();
+                }
+                else if(!String.IsNullOrEmpty(filterVM.Mobile))
+                {
+                    return await _context.Patients.Where(e => e.Mobile == filterVM.Mobile).FirstOrDefaultAsync();
+                }                
+            }
+            return null;
+        }
         public async Task<PatientVM> AddPatientRequest(PatientVM data)
         {
             using (var transaction = _context.Database.BeginTransaction())
@@ -36,7 +52,8 @@ namespace DCBMS_API.Repository
                     patient.DateOfBirth = data.DateOfBirth;
                     patient.Mobile = data.Mobile;
                     patient.TestDate = DateTime.Now;
-                    patient.BillNo = data.PatientName.Substring(0, 3) + DateTime.Now.Minute + DateTime.Now.Hour + DateTime.Now.Day + DateTime.Now.Month + DateTime.Now.Year;
+                    patient.DueDate = DateTime.Now;
+                    patient.BillNo = DateTime.Now.Second.ToString() + DateTime.Now.Minute + DateTime.Now.Hour+"-" + DateTime.Now.Day + DateTime.Now.Month + DateTime.Now.ToString("yy"); 
                     patient.IsPaid = false;
                     patient.Status = "Unpaid";
                     patient.TotalAmount = totalAmount;
@@ -59,19 +76,21 @@ namespace DCBMS_API.Repository
                         await _context.SaveChangesAsync();
                         transaction.Commit();
                     }
-                    var requestRes = _context.TestRequests.Where(e => e.PatientId == patient.Id).ToList();
+                    var requestRes = _context.TestRequests.Where(e => e.PatientId == patient.Id).Include(e=> e.Test).ToList();
                     foreach (var item in requestRes)
                     {
-                        item.TestName = item.Test.TestTypeName;
+                        item.TestName = item.Test.TestName;
                     }
                     PatientVM res = new PatientVM();
                     res.PatientName = patient.PatientName;
                     res.DateOfBirth = patient.DateOfBirth;
                     res.Mobile = patient.Mobile;
                     res.TestDate = patient.TestDate;
+                    res.DueDate = patient.DueDate;
                     res.BillNo = patient.BillNo;
                     res.IsPaid = patient.IsPaid;
                     res.Status = patient.Status;
+                    res.TotalAmount = patient.TotalAmount;
                     res.Id = patient.Id;
                     res.TestRequestList = requestRes;
 
@@ -84,6 +103,59 @@ namespace DCBMS_API.Repository
                 }
             }
         }
+
+        public async Task<Patient> ProcessPay(int PatientId)
+        {
+            Patient patient = new Patient();
+            if (PatientId>0)
+            {
+                patient = await _context.Patients.Where(e => e.Id == PatientId).FirstOrDefaultAsync();
+                patient.IsComplete = true;
+                patient.IsPaid = true;
+                patient.Status = "Paid";
+                _context.Patients.Update(patient);
+                _context.SaveChanges();
+            }
+            return patient;
+        }
+
+        public async Task<List<TestWiseReportVM>> testWiseReport(FilterVM filter)
+        {
+            try
+            {
+                DateTime fromDate = Convert.ToDateTime(filter.FromDate);
+                DateTime toDate = Convert.ToDateTime(filter.ToDate);
+                List<TestWiseReportVM> response = new List<TestWiseReportVM>();
+                List<TestRequest> testRequestList = new List<TestRequest>();
+
+                var patientList = await _context.Patients.Where(e => e.TestDate.Date >= fromDate.Date && e.TestDate.Date <= toDate.Date && e.IsPaid == true).ToListAsync();
+                foreach (var item in patientList)
+                {
+                    var requestList = await _context.TestRequests.Where(e => e.PatientId == item.Id).ToListAsync();
+                    testRequestList.AddRange(requestList);
+                }
+                var testLIst = await _context.Tests.ToListAsync();
+                foreach (var item in testLIst)
+                {
+                    TestWiseReportVM rpt = new TestWiseReportVM();
+                    rpt.TestId = item.Id;
+                    rpt.TestName = item.TestName;
+                    rpt.NoOfTest = testRequestList.Where(e => e.TestId == item.Id).ToList().Count();
+                    rpt.TotalAmount = testRequestList.Where(e => e.TestId == item.Id).ToList().Sum(e => e.PayableAmount);
+                    response.Add(rpt);
+                }
+                return response;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            
+
+            
+        }
+
+
 
         //public async Task<List<Test>> GetAllTest()
         //{

@@ -15,6 +15,8 @@ namespace DCBMS_API.Models
         public string Mobile { get; set; }
         public string BillNo { get; set; }
         public DateTime TestDate { get; set; }
+        public DateTime DueDate { get; set; }
+        public DateTime PaymentDate { get; set; }
         public decimal TotalAmount { get; set; }
         public string Status { get; set; }
         public bool IsPaid { get; set; }
