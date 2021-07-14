@@ -21,31 +21,31 @@ const Header = () =>{
                         <NavLink className="navbar-brand" to="/">Home</NavLink>
                     </div>
                 </div>
-                <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <div className="dropdown">
+                    <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Setup
                     </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <NavLink className="dropdown-item" to="/test-type">Test Type</NavLink>
                     <NavLink className="dropdown-item" to="/test">Test</NavLink>
                     </div>
                 </div>
 
-                <div class="dropdown mx-2">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <div className="dropdown mx-2">
+                    <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Test Request
                     </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <NavLink className="dropdown-item" to="/entry">Entry</NavLink>
                     <NavLink className="dropdown-item" to="/payment">Payment</NavLink>
                     </div>
                 </div>
 
-                <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <div className="dropdown">
+                    <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Report
                     </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <NavLink className="dropdown-item" to="/test-wise">Test Wise</NavLink>
                     <NavLink className="dropdown-item" to="/type-wise">Type Wise</NavLink>
                     <NavLink className="dropdown-item" to="/unpaid-bill">Unpaid Bill</NavLink>

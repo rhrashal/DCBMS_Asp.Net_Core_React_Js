@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { NavLink, useHistory } from "react-router-dom";
 import { httpSimpleRequest } from "../../Utils/httpClient";
 import { setCookie, getCookie, deleteCookie } from "../../Utils/cookies";
-import { formFieldName } from "./formField";
 import { TextInput } from "../../Form";
 
 let Home = (props) => {

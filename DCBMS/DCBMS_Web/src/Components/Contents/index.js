@@ -4,5 +4,6 @@ import Signin from "./Signin";
 // import Pagination from './Pagination';
 import Home from "./Home";
 import TestType from "./TestType";
+import TestSetup from "./TestSetup";
 
-export { Signin, Home, TestType };
+export { Signin, Home, TestType,TestSetup };

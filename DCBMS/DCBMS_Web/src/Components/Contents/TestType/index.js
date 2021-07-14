@@ -21,8 +21,9 @@ let TestType = (props) => {
   useEffect(() => {
     let loginToken = getCookie(process.env.REACT_APP_LOGIN_TOKEN_KEY);
     if (loginToken) {
-      // routChange(`/admin/users`);
+       routChange(`/test-type`);
       console.log("Token Found", loginToken);
+       GetAllTestType();
     }
   }, []);
 
@@ -61,6 +62,8 @@ let TestType = (props) => {
       .then((response) => {
         console.log("response", response.data);
         if (response?.data) {
+          setTest({ testTypeName: "" });
+           GetAllTestType();
           alert(response?.data.results);
           //setAllTest(response.data);
         } else {
@@ -98,8 +101,7 @@ let TestType = (props) => {
       .then((response) => {
         console.log("response", response.data);
         if (response?.data) {
-          alert(response?.data.results);
-          //setAllTest(response.data.results);
+          setAllTest(response.data.results);
         } else {
           let notifyOptions = {
             title: "Error",
@@ -119,7 +121,50 @@ let TestType = (props) => {
         // notifications(notifyOptions);
       });
   };
-  GetAllTestType();
+
+  const DeleteTestType = (id) => {
+    console.log("Id", id);
+    if(id<1){
+      return;
+    }
+   if(!window.confirm('Delete the item?')){
+     return;
+   }
+    let token = getCookie(process.env.REACT_APP_LOGIN_TOKEN_KEY);
+    let httpRequest = {
+      method: "delete",
+      url: `${process.env.REACT_APP_API_HOST_URL}/DeleteTestType?testTypeId=`+ id,
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    httpSimpleRequest(httpRequest)
+      .then((response) => {
+        console.log("response", response.data);
+        if (response?.data) {
+           GetAllTestType();
+           alert(response?.data.results);
+        } else {
+          let notifyOptions = {
+            title: "Error",
+            message: response.data.error || "Incorrect username or password.",
+            type: "danger",
+          };
+          // notifications(notifyOptions);
+        }
+      })
+      .catch((error) => {
+        console.log("error", error);
+        let notifyOptions = {
+          title: "Error",
+          message: "Incorrect username or password.",
+          type: "danger",
+        };
+        // notifications(notifyOptions);
+      });
+  };
   return (
     <div className="row justify-content-center mt-5">
       <div className="col-12 col-md-12 col-xl-10 col-lg-10 col-sm-12">
@@ -163,15 +208,17 @@ let TestType = (props) => {
                       <tr>
                         <th scope="col">SL</th>
                         <th scope="col">Type Name</th>
+                        <th scope="col">Action</th>
                       </tr>
                     </thead>
                     <tbody>
                       {allTest.map((item, index) => {
                         return (
                           <tr key={index}>
-                            <th scope="row">{item.id}</th>
-                            {/* <th scope="row">{index+1}</th> */}
-                            <td colspan="2">{item.testTypeName}</td>
+                            {/* <th scope="row">{item.id}</th> */}
+                            <th scope="row">{index+1}</th>
+                            <td>{item.testTypeName}</td>
+                            <td><button type="button" className="btn btn-danger" onClick={()=>DeleteTestType(item.id)} > X</button></td>
                           </tr>
                         );
                       })}
