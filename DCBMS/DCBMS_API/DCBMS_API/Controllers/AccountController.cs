@@ -38,8 +38,8 @@ namespace DCBMS_API.Controllers
         [HttpPost]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
-            var user = await _userManager.FindByNameAsync(model.Username);
-            if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
+            var user = await _userManager.FindByNameAsync(model.email);
+            if (user != null && await _userManager.CheckPasswordAsync(user, model.password))
             {
                 var userRoles = await _userManager.GetRolesAsync(user);
 
@@ -63,12 +63,13 @@ namespace DCBMS_API.Controllers
                     claims: authClaims,
                     signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
                     );
-
+                var tokenRes = new JwtSecurityTokenHandler().WriteToken(token);
                 return Ok(new
-                {
-                    token = new JwtSecurityTokenHandler().WriteToken(token),
+                {                    
+                    token = tokenRes,
                     expiration = token.ValidTo,
-                    Role = "Admin"
+                    Role = "Admin",
+                    isAuthorization = tokenRes
                 }) ;
             }
             return Unauthorized();
