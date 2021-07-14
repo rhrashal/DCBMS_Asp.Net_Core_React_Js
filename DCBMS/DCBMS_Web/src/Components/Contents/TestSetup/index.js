@@ -6,9 +6,13 @@ import { formFieldName } from './formField';
 import { TextInput } from '../../Form';
 
 let TestSetup = (props) => {
-    let [test, setTest] = useState( { testName: "", fee:"",testTypeId:""} );
-    let [allTest, setAllTest] = useState( [ {id:1, testName: "1st Test", fee:10, type:1 },  {id:2, testName: "2nd Type", fee:10, type:2} ] );
-    let [allTestType, setAllTestType] = useState( [{id:1, testType: "1st Type"}, {id:2, testType: "2st Type"} ] );
+    let [testType, setTestType] = useState( {testTypeName: ""} );
+    let [allTestType, setAllTestType] = useState( [  { id: 1, testTypeName: "1st Type" },  ] );
+
+    let [test, setTest] = useState(  {  testName: "",fee: 0.00,testTypeId: 0} );
+    let [allTest, setAllTest] = useState( [ {  id: 0,testName: "",fee: 0.00,testTypeId: 0,testTypeName: ""} ] );
+
+
 
     let historyObj = useHistory();
     let routChange = (value) => {
@@ -21,38 +25,126 @@ let TestSetup = (props) => {
             if (loginToken) {
                // routChange(`/admin/users`);
                console.log("Token Found", loginToken);
-               getAllTestType()
+               GetAllTestType();
+               GetAllTests();
             }
         }, []
     );
 
-    const getAllTestType= ()=>{
-        console.log("getAllTestType");
-        let httpRequest = {
-            method: "post",
-            url: `${process.env.REACT_APP_API_HOST_URL}/test-type`,
-            data: {},
-            headers: {
-                'content-type':'application/json'
-            }
+  const GetAllTestType = () => {
+    let token = getCookie(process.env.REACT_APP_LOGIN_TOKEN_KEY);
+    let httpRequest = {
+      method: "get",
+      url: `${process.env.REACT_APP_API_HOST_URL}/GetTestTypeList`,
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    httpSimpleRequest(httpRequest)
+      .then((response) => {
+        console.log("response", response.data);
+        if (response?.data) {
+          setAllTestType(response.data.results);
+        } else {
+          let notifyOptions = {
+            title: "Error",
+            message: response.data.error || "Incorrect username or password.",
+            type: "danger",
+          };
+          // notifications(notifyOptions);
+        }
+      })
+      .catch((error) => {
+        console.log("error", error);
+        let notifyOptions = {
+          title: "Error",
+          message: "Incorrect username or password.",
+          type: "danger",
         };
+        // notifications(notifyOptions);
+      });
+  };
 
-        httpSimpleRequest(httpRequest)
-            .then(response => {
-                console.log("response", response.data);
-                if (response?.data) {
-                    setAllTestType(response.data);
-                }
+  const GetAllTests = () => {
+    let token = getCookie(process.env.REACT_APP_LOGIN_TOKEN_KEY);
+    let httpRequest = {
+      method: "get",
+      url: `${process.env.REACT_APP_API_HOST_URL}/GetTestList`,
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
 
-            }).catch(error => {
-                console.log("error", error);
-                let notifyOptions={
-                    title: "Error",
-                    message: "Incorrect username or password.",
-                    type: "danger"
-                }; 
-            })
+    httpSimpleRequest(httpRequest)
+      .then((response) => {
+        console.log("response", response.data);
+        if (response?.data) {
+          setAllTest(response.data.results);
+        } else {
+          let notifyOptions = {
+            title: "Error",
+            message: response.data.error || "Incorrect username or password.",
+            type: "danger",
+          };
+          // notifications(notifyOptions);
+        }
+      })
+      .catch((error) => {
+        console.log("error", error);
+        let notifyOptions = {
+          title: "Error",
+          message: "Incorrect username or password.",
+          type: "danger",
+        };
+        // notifications(notifyOptions);
+      });
+  };
+
+  const DeleteTest = (id) => {
+    console.log("Id", id);
+    if(id<1){
+      return;
     }
+   if(!window.confirm('Delete the item?')){
+     return;
+   }
+    let token = getCookie(process.env.REACT_APP_LOGIN_TOKEN_KEY);
+    let httpRequest = {
+      method: "delete",
+      url: `${process.env.REACT_APP_API_HOST_URL}/DeleteTest?testId=`+ id,
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    httpSimpleRequest(httpRequest)
+      .then((response) => {
+        console.log("response", response.data);
+        if (response?.data) {
+           GetAllTests();
+        } else {
+          let notifyOptions = {
+            title: "Error",
+            message: response.data.error || "Incorrect username or password.",
+            type: "danger",
+          };
+          // notifications(notifyOptions);
+        }
+      })
+      .catch((error) => {
+        console.log("error", error);
+        let notifyOptions = {
+          title: "Error",
+          message: "Incorrect username or password.",
+          type: "danger",
+        };
+        // notifications(notifyOptions);
+      });
+  };
 
     let handleChange = ({ currentTarget: input }) => {
 
@@ -72,14 +164,15 @@ let TestSetup = (props) => {
             if (name !== "") { signinObj[name] = value; }
         };
 
-        console.log("signinObj", signinObj)
-
+        console.log("testObj", signinObj)
+        let token = getCookie(process.env.REACT_APP_LOGIN_TOKEN_KEY);
         let httpRequest = {
             method: "post",
-            url: `${process.env.REACT_APP_API_HOST_URL}/test-setup`,
+            url: `${process.env.REACT_APP_API_HOST_URL}/AddTest`,
             data: signinObj,
             headers: {
-                'content-type':'application/json'
+                'content-type':'application/json',
+                 Authorization: `Bearer ${token}`,
             }
         }
 
@@ -87,7 +180,9 @@ let TestSetup = (props) => {
             .then(response => {
                 console.log("response", response.data);
                 if (response?.data) {
-                    setAllTest(response.data);
+                  setTest({ id: 0,testName: "",fee: 0.00,testTypeId: 0});
+                  GetAllTests();
+                  alert(response?.data.results);
                 }
             }).catch(error => {
                 console.log("error", error);
@@ -140,23 +235,26 @@ let TestSetup = (props) => {
                                                 className="form-control mb-2 "
                                                 name="testTypeId"
                                                 onChange={handleChange} >
-                                                {allTestType.map((item, index) => {
+                                                    <option selected value="0">Choose Test Type</option>
+                                                {allTestType.map((item, index) => {                                                    
                                                     return (
+                                                        
                                                         <option
                                                             key={index}
                                                             value={item.id}
-                                                        >{item.testType}
+                                                        >{item.testTypeName}
                                                         </option>
                                                     )
                                                 })}
                                             </select>
                                         </div>
-                                    </div>
-                                    <div className="row mx-2 justify-content-center">
-                                        <div className="col-2 ">
+                                    <div className="form-group col-md-6">
+                                        <div className="float-right">
                                             <button type="submit" className="btn new_bnt_1 font-weight-bold ">Save</button>
                                         </div>
                                     </div>
+                                    </div>
+
                                 </form>
                                 <div className="row justify-content-center border mt-5" >
                                 <table className="table mx-2 my-2 table-bordered" >
@@ -166,16 +264,19 @@ let TestSetup = (props) => {
                                             <th scope="col">Test Name</th>
                                             <th scope="col">Fee</th>
                                             <th scope="col">Type</th>
+                                            <th scope="col">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {
                                             allTest.map((item,index)=>{
                                                 return <tr key={index}>
-                                                <td scope="row">{item.id}</td>
+                                                {/* <td scope="row">{item.id}</td> */}
+                                                <th scope="row">{index+1}</th>
                                                 <td scope="row">{item.testName}</td>
                                                 <td scope="row">{item.fee}</td>
-                                                <td scope="row">{ testTypeFilter(item.type) }</td>
+                                                <td scope="row">{ item.testTypeName }</td>
+                                                <td><button type="button" className="btn btn-danger" onClick={()=>DeleteTest(item.id)} > X</button></td>
                                             </tr>
                                             })
                                         }

@@ -22,7 +22,7 @@ let formFieldName =
             placeholder: "",
             inputClass: "form-control",
             inputId: "fee",
-            inputType: "text",
+            inputType: "number",
             inputName:"fee",
             errorName:"fee",
             errorClass:"",

@@ -145,7 +145,6 @@ let TestType = (props) => {
         console.log("response", response.data);
         if (response?.data) {
            GetAllTestType();
-           alert(response?.data.results);
         } else {
           let notifyOptions = {
             title: "Error",
