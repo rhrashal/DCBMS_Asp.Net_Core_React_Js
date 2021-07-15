@@ -7,7 +7,7 @@ namespace DCBMS_API.Interface
 {
     public interface IPaitentRepository
     {
-        Task<Patient> ProcessPay(int PatientId);
+        Task<string> ProcessPay(int PatientId);
 
         Task<Patient> GetPatient(ScerchVM filterVM);
 

@@ -104,19 +104,27 @@ namespace DCBMS_API.Repository
             }
         }
 
-        public async Task<Patient> ProcessPay(int PatientId)
+        public async Task<string> ProcessPay(int PatientId)
         {
             Patient patient = new Patient();
             if (PatientId>0)
             {
                 patient = await _context.Patients.Where(e => e.Id == PatientId).FirstOrDefaultAsync();
-                patient.IsComplete = true;
-                patient.IsPaid = true;
-                patient.Status = "Paid";
-                _context.Patients.Update(patient);
-                _context.SaveChanges();
+                if (!patient.IsPaid)
+                {
+                    patient.IsComplete = true;
+                    patient.IsPaid = true;
+                    patient.Status = "Paid";
+                    _context.Patients.Update(patient);
+                    _context.SaveChanges();
+                    return "Bill Paid Successfully.";
+                }
+                else
+                {
+                    return "Bill already Paid.";
+                }
             }
-            return patient;
+            return "Bill Not found.";
         }
 
         public async Task<List<TestWiseReportVM>> TestWiseReport(FilterVM filter)

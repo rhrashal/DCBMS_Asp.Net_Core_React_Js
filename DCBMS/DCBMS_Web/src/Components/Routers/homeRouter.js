@@ -1,6 +1,13 @@
 import React from "react";
 import { Route, Switch, useHistory, Redirect } from "react-router-dom";
-import { Signin, Home, TestType, TestSetup, TestWiseReport } from "../Contents";
+import {
+  Signin,
+  Home,
+  TestType,
+  TestSetup,
+  TestWiseReport,
+  TypeWiseReport,
+} from "../Contents";
 
 function HomeRoute() {
   const history = useHistory();
@@ -17,6 +24,11 @@ function HomeRoute() {
           path="/test-wise"
           exact
           render={() => <TestWiseReport />}
+        ></Route>
+        <Route
+          path="/type-wise"
+          exact
+          render={() => <TypeWiseReport />}
         ></Route>
         {/* <Route path="/authe/signup" exact render={() => <Signup />}></Route>
                 <Route path="/admin/users" exact render={() => <Users />}></Route> */}

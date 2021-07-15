@@ -6,5 +6,6 @@ import Home from "./Home";
 import TestType from "./TestType";
 import TestSetup from "./TestSetup";
 import TestWiseReport from "./TestWrpt";
+import TypeWiseReport from "./TypeWrpt";
 
-export { Signin, Home, TestType, TestSetup, TestWiseReport };
+export { Signin, Home, TestType, TestSetup, TestWiseReport, TypeWiseReport };

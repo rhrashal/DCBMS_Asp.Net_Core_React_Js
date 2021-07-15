@@ -5,7 +5,7 @@ import { setCookie, getCookie, deleteCookie } from "../../Utils/cookies";
 import { TextInput, InputForDate } from "../../Form";
 import "react-datepicker/dist/react-datepicker.css";
 
-let TestWiseReport = (props) => {
+let TypeWiseReport = (props) => {
   let [Filter, setFilter] = useState({
     FromDate: "",
     ToDate: "",
@@ -87,7 +87,7 @@ let TestWiseReport = (props) => {
               <div className="container">
                 <div className="row justify-content-center  font-weight-bold h3 ">
                   <div className="col-12 mx-0  border-top-0 border-right-0 border-left-0  border-bottom text-center pb-2">
-                    Test Wise Report
+                    Type Wise Report
                   </div>
                 </div>
                 <form onSubmit={handleSubmit}>
@@ -178,4 +178,4 @@ let TestWiseReport = (props) => {
   );
 };
 
-export default TestWiseReport;
+export default TypeWiseReport;
