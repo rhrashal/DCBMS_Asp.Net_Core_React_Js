@@ -158,7 +158,7 @@ namespace DCBMS_API.Controllers
 
         #region Report
         [Route("TestWiseReport")]
-        [HttpGet]
+        [HttpPost]
         public async Task<ActionResult<Response>> TestWiseReport(FilterVM filter)
         {
             Response res = new Response();
