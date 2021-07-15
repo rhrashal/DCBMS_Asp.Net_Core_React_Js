@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -22,6 +23,8 @@ namespace DCBMS_API.Models
         public bool IsPaid { get; set; }
         public bool IsComplete { get; set; }
         public bool IsDelivered { get; set; }
+        [NotMapped]
+        public decimal GrandTotal { get; set; }
 
     }
 }

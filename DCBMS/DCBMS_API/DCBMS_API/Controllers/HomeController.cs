@@ -167,7 +167,7 @@ namespace DCBMS_API.Controllers
         }
 
         [Route("TypeWiseReport")]
-        [HttpGet]
+        [HttpPost]
         public async Task<ActionResult<Response>> TypeWiseReport(FilterVM filter)
         {
             Response res = new Response();
@@ -176,13 +176,14 @@ namespace DCBMS_API.Controllers
         }
 
         [Route("UnPaidBillReport")]
-        [HttpGet]
+        [HttpPost]
         public async Task<ActionResult<Response>> UnPaidBillReport(FilterVM filter)
         {
             Response res = new Response();
             res.results = await _patient.UnPaidBillReport(filter);
             return res;
         }
+
 
         #endregion
     }

@@ -11,6 +11,8 @@ namespace DCBMS_API.Models.ViewModel
         public string TestName { get; set; }
         public int NoOfTest { get; set; }
         public decimal TotalAmount { get; set; }
+        public decimal GrandTotal { get; set; }
+
 
     }
 
@@ -20,6 +22,7 @@ namespace DCBMS_API.Models.ViewModel
         public string TestTypeName { get; set; }
         public int NoOfTest { get; set; }
         public decimal TotalAmount { get; set; }
+        public decimal GrandTotal { get; set; }
 
     }
 }

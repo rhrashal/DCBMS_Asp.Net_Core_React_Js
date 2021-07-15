@@ -5,7 +5,7 @@ import { setCookie, getCookie, deleteCookie } from "../../Utils/cookies";
 import { TextInput, InputForDate } from "../../Form";
 import "react-datepicker/dist/react-datepicker.css";
 
-let TypeWiseReport = (props) => {
+let UnPaidReport = (props) => {
   let [Filter, setFilter] = useState({
     FromDate: "",
     ToDate: "",
@@ -42,7 +42,7 @@ let TypeWiseReport = (props) => {
     let token = getCookie(process.env.REACT_APP_LOGIN_TOKEN_KEY);
     let httpRequest = {
       method: "post",
-      url: `${process.env.REACT_APP_API_HOST_URL}/TypeWiseReport`,
+      url: `${process.env.REACT_APP_API_HOST_URL}/UnPaidBillReport`,
       data: Filter,
       headers: {
         "content-type": "application/json",
@@ -87,7 +87,7 @@ let TypeWiseReport = (props) => {
               <div className="container">
                 <div className="row justify-content-center  font-weight-bold h3 ">
                   <div className="col-12 mx-0  border-top-0 border-right-0 border-left-0  border-bottom text-center pb-2">
-                    Type Wise Report
+                    UnPaid Report
                   </div>
                 </div>
                 <form onSubmit={handleSubmit}>
@@ -149,9 +149,10 @@ let TypeWiseReport = (props) => {
                     <thead className="thead-light">
                       <tr>
                         <th scope="col">SL</th>
-                        <th scope="col">Test Type Name</th>
-                        <th scope="col">Total Test</th>
-                        <th scope="col">Total Amount</th>
+                        <th scope="col">Bill No</th>
+                        <th scope="col">Contact</th>
+                        <th scope="col">Patient Name</th>
+                        <th scope="col">Bill Amount</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -160,14 +161,15 @@ let TypeWiseReport = (props) => {
                           <tr key={index}>
                             {/* <th scope="row">{item.id}</th> */}
                             <th scope="row">{index + 1}</th>
-                            <td>{item.testTypeName}</td>
-                            <td>{item.noOfTest}</td>
+                            <td>{item.billNo}</td>
+                            <td>{item.mobile}</td>
+                            <td>{item.patientName}</td>
                             <td>{item.totalAmount}</td>
                           </tr>
                         );
                       })}
                       <tr>
-                        <th colSpan="3">Total</th>
+                        <th colSpan="4">Total</th>
                         <th>{allTest[0]?.grandTotal}</th>
                       </tr>
                     </tbody>
@@ -182,4 +184,4 @@ let TypeWiseReport = (props) => {
   );
 };
 
-export default TypeWiseReport;
+export default UnPaidReport;

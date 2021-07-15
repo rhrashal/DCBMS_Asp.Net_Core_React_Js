@@ -7,6 +7,7 @@ import {
   TestSetup,
   TestWiseReport,
   TypeWiseReport,
+  UnPaidReport,
 } from "../Contents";
 
 function HomeRoute() {
@@ -29,6 +30,11 @@ function HomeRoute() {
           path="/type-wise"
           exact
           render={() => <TypeWiseReport />}
+        ></Route>
+        <Route
+          path="/unpaid-bill"
+          exact
+          render={() => <UnPaidReport />}
         ></Route>
         {/* <Route path="/authe/signup" exact render={() => <Signup />}></Route>
                 <Route path="/admin/users" exact render={() => <Users />}></Route> */}

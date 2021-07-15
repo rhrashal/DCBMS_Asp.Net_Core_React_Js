@@ -135,7 +135,7 @@ let TestWiseReport = (props) => {
                         type="submit"
                         className="btn new_bnt_1 font-weight-bold mt-4"
                       >
-                        Save
+                        Show
                       </button>
                     </div>
                   </div>
@@ -166,6 +166,10 @@ let TestWiseReport = (props) => {
                           </tr>
                         );
                       })}
+                      <tr>
+                        <th colSpan="3">Total</th>
+                        <th>{allTest[0]?.grandTotal}</th>
+                      </tr>
                     </tbody>
                   </table>
                 </div>

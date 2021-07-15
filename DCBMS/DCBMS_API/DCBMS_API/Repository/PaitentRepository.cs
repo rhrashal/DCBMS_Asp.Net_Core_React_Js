@@ -143,6 +143,7 @@ namespace DCBMS_API.Repository
                     testRequestList.AddRange(requestList);
                 }
                 var testLIst = await _context.Tests.ToListAsync();
+                decimal grandTotal = 0;
                 foreach (var item in testLIst)
                 {
                     TestWiseReportVM rpt = new TestWiseReportVM();
@@ -150,8 +151,11 @@ namespace DCBMS_API.Repository
                     rpt.TestName = item.TestName;
                     rpt.NoOfTest = testRequestList.Where(e => e.TestId == item.Id).ToList().Count();
                     rpt.TotalAmount = testRequestList.Where(e => e.TestId == item.Id).ToList().Sum(e => e.PayableAmount);
+                    grandTotal += rpt.TotalAmount;
                     response.Add(rpt);
                 }
+                response[0].GrandTotal = grandTotal;
+
                 return response;
             }
             catch (Exception ex)
@@ -180,6 +184,7 @@ namespace DCBMS_API.Repository
                 }
                 var testTypeList = await _context.TestTypes.ToListAsync();
                 var testList = await _context.Tests.ToListAsync();
+                decimal grandTotal = 0;
                 foreach (var item in testTypeList)
                 {
                     TypeWiseReportVM rpt = new TypeWiseReportVM();
@@ -198,9 +203,11 @@ namespace DCBMS_API.Repository
 
                     rpt.NoOfTest = no;
                     rpt.TotalAmount = amount;
-
+                    grandTotal += rpt.TotalAmount;
                     response.Add(rpt);
                 }
+
+                response[0].GrandTotal = grandTotal;
                 return response;
             }
             catch (Exception ex)
@@ -215,6 +222,7 @@ namespace DCBMS_API.Repository
             DateTime fromDate = Convert.ToDateTime(filter.FromDate);
             DateTime toDate = Convert.ToDateTime(filter.ToDate);
             patientList = await _context.Patients.Where(e => e.TestDate.Date >= fromDate.Date && e.TestDate.Date <= toDate.Date && e.IsPaid == false).ToListAsync();
+            patientList[0].GrandTotal = patientList.Sum(e=> e.TotalAmount);
             return patientList;
         }
 
