@@ -8,6 +8,7 @@ import TestSetup from "./TestSetup";
 import TestWiseReport from "./TestWrpt";
 import TypeWiseReport from "./TypeWrpt";
 import UnPaidReport from "./UnPaidrpt";
+import TestRequest from "./TestRequest";
 
 export {
   Signin,
@@ -17,4 +18,5 @@ export {
   TestWiseReport,
   TypeWiseReport,
   UnPaidReport,
+  TestRequest,
 };

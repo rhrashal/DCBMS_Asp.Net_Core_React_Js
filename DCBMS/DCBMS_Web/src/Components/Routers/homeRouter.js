@@ -8,6 +8,7 @@ import {
   TestWiseReport,
   TypeWiseReport,
   UnPaidReport,
+  TestRequest,
 } from "../Contents";
 
 function HomeRoute() {
@@ -21,6 +22,7 @@ function HomeRoute() {
         <Route path="/home" exact render={() => <Home />}></Route>
         <Route path="/test-type" exact render={() => <TestType />}></Route>
         <Route path="/test" exact render={() => <TestSetup />}></Route>
+        <Route path="/entry" exact render={() => <TestRequest />}></Route>
         <Route
           path="/test-wise"
           exact

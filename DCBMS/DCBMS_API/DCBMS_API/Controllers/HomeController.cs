@@ -50,7 +50,7 @@ namespace DCBMS_API.Controllers
 
         [Route("AddPatientRequest")]
         [HttpPost]
-        public async Task<ActionResult<Response>> AddTest(PatientVM patient)
+        public async Task<ActionResult<Response>> AddPatientRequest(PatientVM patient)
         {
             Response res = new Response();
             if (patient != null && patient.TestRequestList.Count > 0)
