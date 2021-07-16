@@ -1,15 +1,6 @@
 import React from "react";
 import { Route, Switch, useHistory, Redirect } from "react-router-dom";
-import {
-  Signin,
-  Home,
-  TestType,
-  TestSetup,
-  TestWiseReport,
-  TypeWiseReport,
-  UnPaidReport,
-  TestRequest,
-} from "../Contents";
+import {  Signin,  Home,  TestType,  TestSetup,  TestWiseReport,  TypeWiseReport,  UnPaidReport,  TestRequest,PayBill} from "../Contents";
 
 function HomeRoute() {
   const history = useHistory();
@@ -23,24 +14,11 @@ function HomeRoute() {
         <Route path="/test-type" exact render={() => <TestType />}></Route>
         <Route path="/test" exact render={() => <TestSetup />}></Route>
         <Route path="/entry" exact render={() => <TestRequest />}></Route>
-        <Route
-          path="/test-wise"
-          exact
-          render={() => <TestWiseReport />}
-        ></Route>
-        <Route
-          path="/type-wise"
-          exact
-          render={() => <TypeWiseReport />}
-        ></Route>
-        <Route
-          path="/unpaid-bill"
-          exact
-          render={() => <UnPaidReport />}
-        ></Route>
-        {/* <Route path="/authe/signup" exact render={() => <Signup />}></Route>
-                <Route path="/admin/users" exact render={() => <Users />}></Route> */}
-        <Route render={() => <div>Not Found</div>}></Route>
+        <Route path="/payment" exact render={() => <PayBill />}></Route>
+        <Route path="/test-wise"  exact  render={() => <TestWiseReport />}></Route>
+        <Route path="/type-wise" exact render={() => <TypeWiseReport />}></Route>
+        <Route path="/unpaid-bill" exact render={() => <UnPaidReport />}></Route>      
+        <Route render={() => <div style={{color: "red",textAlign:"center"}}>Not Found</div>}></Route>
       </Switch>
     </div>
   );

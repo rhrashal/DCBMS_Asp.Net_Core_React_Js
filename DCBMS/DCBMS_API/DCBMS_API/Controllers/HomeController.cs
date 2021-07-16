@@ -30,7 +30,7 @@ namespace DCBMS_API.Controllers
 
         [Route("BillPay")]
         [HttpGet]
-        public async Task<ActionResult<Response>> ScerchBill(int Id)
+        public async Task<ActionResult<Response>> BillPay(int Id)
         {
             Response res = new Response();
             res.results = await _patient.ProcessPay(Id);
@@ -39,11 +39,13 @@ namespace DCBMS_API.Controllers
 
 
         [Route("ScerchBill")]
-        [HttpGet]
+        [HttpPost]
         public async Task<ActionResult<Response>> ScerchBill(ScerchVM filterVM)
         {
             Response res = new Response();
-            res.results = await _patient.GetPatient(filterVM);
+            var data = await _patient.GetPatient(filterVM);
+            res.results = data;
+            res.message = data!=null ? "Data found." : "Data not found.";
             return res;
         }
 
