@@ -17,7 +17,7 @@ let Signin = (props) => {
     let loginToken = getCookie(process.env.REACT_APP_LOGIN_TOKEN_KEY);
     if (loginToken) {
       routChange(`/home`);
-      console.log("Token Found", loginToken);
+      //console.log("Token Found", loginToken);
     }
   }, []);
 
@@ -26,13 +26,13 @@ let Signin = (props) => {
 
   let handleChange = ({ currentTarget: input }) => {
     let signinInfo = { ...signInInfo, [input.name]: input.value };
-    console.log("signinInfo", signinInfo);
+    //console.log("signinInfo", signinInfo);
     setsignInInfo(signinInfo);
   };
 
   const handleSubmit = (element) => {
     element.preventDefault();
-    console.log(element.target);
+    //console.log(element.target);
     let signinSubmitArr = element.target;
     let signinObj = {};
     for (let i = 0; i < signinSubmitArr.length; i++) {
@@ -53,7 +53,7 @@ let Signin = (props) => {
 
     httpSimpleRequest(httpRequest)
       .then((response) => {
-        console.log("response", response.data);
+        //console.log("response", response.data);
         if (response?.data?.isAuthorization) {
           setCookie(
             process.env.REACT_APP_LOGIN_TOKEN_KEY,
@@ -70,7 +70,7 @@ let Signin = (props) => {
         }
       })
       .catch((error) => {
-        console.log("error", error);
+        //console.log("error", error);
         let notifyOptions = {
           title: "Error",
           message: "Incorrect username or password.",
@@ -80,7 +80,7 @@ let Signin = (props) => {
       });
   };
 
-  console.log("env", process.env.REACT_APP_NOT_SECRET_CODE);
+  //console.log("env", process.env.REACT_APP_NOT_SECRET_CODE);
   return (
     <div className="row justify-content-center mt-5">
       <div className="col-12 col-md-8 col-xl-5 col-lg-5 col-sm-10">

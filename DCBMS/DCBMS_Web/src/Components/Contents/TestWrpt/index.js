@@ -4,6 +4,7 @@ import { httpSimpleRequest } from "../../Utils/httpClient";
 import { setCookie, getCookie, deleteCookie } from "../../Utils/cookies";
 import { TextInput, InputForDate } from "../../Form";
 import "react-datepicker/dist/react-datepicker.css";
+import GenerateFile from "../JsPdf";
 
 let TestWiseReport = (props) => {
   let [Filter, setFilter] = useState({
@@ -18,27 +19,52 @@ let TestWiseReport = (props) => {
     historyObj.push(value);
   };
 
+
+  
+const pdfDataHeader = ()=>{
+  let headar =[ ["SL No","Test Name","Total Test","Total Amount"]];
+  return headar;
+}
+
+
+const pdfDataBody = ()=>{
+  let body  = []
+  allTest.map((item,index)=>{
+    let newBody = [(index+1).toString(), item.testName,item.noOfTest.toString(),item.totalAmount.toString()];
+    body.push(newBody);    
+  })
+  return body;
+  // body: [
+  //       ["David", "david@example.com", "Sweden"],
+  //       ["Castille", "castille@example.com", "Spain"],
+  //       // ...
+  //     ]
+
+  //     return body
+}
+
   useEffect(() => {
     let loginToken = getCookie(process.env.REACT_APP_LOGIN_TOKEN_KEY);
-    if (loginToken) {
-      // routChange(`/test-type`);
-      console.log("Token Found", loginToken);
+    if (!loginToken) {
+      routChange(`/signin`);
+      return;
+      //console.log("Token Found", loginToken);
       //GetAllTestType();
     }
   }, []);
 
   let handleChange = ({ currentTarget: input }) => {
-    //console.log("input", input);
+    ////console.log("input", input);
 
     let newFilter = { ...Filter, [input.name]: input.value };
-    console.log("newTest", newFilter);
+    //console.log("newTest", newFilter);
     setFilter(newFilter);
   };
 
   const handleSubmit = (element) => {
     element.preventDefault();
 
-    console.log("signinObj", Filter);
+    //console.log("signinObj", Filter);
     let token = getCookie(process.env.REACT_APP_LOGIN_TOKEN_KEY);
     let httpRequest = {
       method: "post",
@@ -52,7 +78,7 @@ let TestWiseReport = (props) => {
 
     httpSimpleRequest(httpRequest)
       .then((response) => {
-        console.log("response", response.data);
+        //console.log("response", response.data);
         if (response?.data) {
           //setTest({ testTypeName: "" });
           //GetAllTestType();
@@ -68,7 +94,7 @@ let TestWiseReport = (props) => {
         }
       })
       .catch((error) => {
-        console.log("error", error);
+        //console.log("error", error);
         let notifyOptions = {
           title: "Error",
           message: "Incorrect username or password.",
@@ -172,6 +198,9 @@ let TestWiseReport = (props) => {
                       </tr>
                     </tbody>
                   </table>
+                </div>
+                <div>
+                <GenerateFile  header={pdfDataHeader()} body={pdfDataBody()} />
                 </div>
               </div>
             </div>

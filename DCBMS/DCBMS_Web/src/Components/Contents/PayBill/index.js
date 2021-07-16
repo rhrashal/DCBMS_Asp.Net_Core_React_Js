@@ -7,7 +7,7 @@ import { TextInput } from "../../Form";
 
 let PayBill = (props) => {
   let [billInfo, setBillInfo] = useState({
-    id: 11,
+    id: 0,
     patientName: "",
     dateOfBirth: "",
     mobile: "",
@@ -37,23 +37,25 @@ let [Filter, setFilter] = useState({
 
   useEffect(() => {
     let loginToken = getCookie(process.env.REACT_APP_LOGIN_TOKEN_KEY);
-    if (loginToken) {
-      // routChange(`/test-type`);
-      console.log("Token Found", loginToken);
+    if (!loginToken) {
+      routChange(`/signin`);
+      return;
+     // //console.log("Token Found", loginToken);
        //GetAllTestType();
     }
+   // //console.log("Token Not Found", loginToken);
   }, []);
 
   let handleChange = ({ currentTarget: input }) => {
     let newTest = { ...Filter, [input.name]: input.value };
-    console.log("newTest", newTest);
+   // //console.log("newTest", newTest);
     setFilter(newTest);
   };
 
   const handleSubmit = (element) => {
     element.preventDefault();
-   console.log("recall");
-    console.log("Filter", Filter);
+   ////console.log("recall");
+   // //console.log("Filter", Filter);
     let token = getCookie(process.env.REACT_APP_LOGIN_TOKEN_KEY);
     let httpRequest = {
       method: "post",
@@ -67,7 +69,7 @@ let [Filter, setFilter] = useState({
 
     httpSimpleRequest(httpRequest)
       .then((response) => {
-        console.log("response", response.data);
+        ////console.log("response", response.data);
         if (response?.data) {
           if(response?.data.results != null){
             setBillInfo(response?.data.results);
@@ -86,7 +88,52 @@ let [Filter, setFilter] = useState({
         }
       })
       .catch((error) => {
-        console.log("error", error);
+        ////console.log("error", error);
+        let notifyOptions = {
+          title: "Error",
+          message: "Incorrect username or password.",
+          type: "danger",
+        };
+        // notifications(notifyOptions);
+      });
+  };
+
+  const GetForResponse = () => {
+   // element.preventDefault();
+   // //console.log("Filter", Filter);
+    let token = getCookie(process.env.REACT_APP_LOGIN_TOKEN_KEY);
+    let httpRequest = {
+      method: "post",
+      url: `${process.env.REACT_APP_API_HOST_URL}/ScerchBill`,
+      data: Filter,
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    httpSimpleRequest(httpRequest)
+      .then((response) => {
+        ////console.log("response", response.data);
+        if (response?.data) {
+          if(response?.data.results != null){
+            setBillInfo(response?.data.results);
+          }
+          
+          //  GetAllTestType();
+         // alert(response?.data.message);
+          //setAllTest(response.data);
+        } else {
+          let notifyOptions = {
+            title: "Error",
+            message: response.data.error || "Incorrect username or password.",
+            type: "danger",
+          };
+          // notifications(notifyOptions);
+        }
+      })
+      .catch((error) => {
+        ////console.log("error", error);
         let notifyOptions = {
           title: "Error",
           message: "Incorrect username or password.",
@@ -105,7 +152,7 @@ let [Filter, setFilter] = useState({
     if(!window.confirm('Do You Want to Pay?')){
       return;
     }
-    console.log("Filter", Filter);
+    //console.log("Filter", Filter);
     let token = getCookie(process.env.REACT_APP_LOGIN_TOKEN_KEY);
     let httpRequest = {
       method: "get",
@@ -118,10 +165,10 @@ let [Filter, setFilter] = useState({
 
     httpSimpleRequest(httpRequest)
       .then((response) => {
-        console.log("response", response.data);
+        //console.log("response", response.data);
         if (response?.data) {
           //setBillInfo(response?.data.results);
-          handleSubmit();
+          GetForResponse();
           alert(response?.data.results);
           //setAllTest(response.data);
         } else {
@@ -134,7 +181,7 @@ let [Filter, setFilter] = useState({
         }
       })
       .catch((error) => {
-        console.log("error", error);
+        //console.log("error", error);
         let notifyOptions = {
           title: "Error",
           message: "Incorrect username or password.",
@@ -144,6 +191,7 @@ let [Filter, setFilter] = useState({
       });
   };
 
+  let statusCss = billInfo.status=="Paid" ? "badge badge-success": "badge badge-warning";
   
   return (
     <div className="row justify-content-center mt-5">
@@ -186,65 +234,71 @@ let [Filter, setFilter] = useState({
           </div>
         </div>
       </div>
+
+
+      {billInfo.id>0 && 
       <div className="col-12 col-md-12 col-xl-10 col-lg-10 col-sm-12">
-        <div className="container custom_form mt-5">
-          <div className="row mt-0 mr-n4 ml-n4">
-            <div className="col-12">
-              <div className="container">
-                <div className="row justify-content-center  font-weight-bold h3 ">
-                  <div className="col-12 mx-0  border-top-0 border-right-0 border-left-0  border-bottom text-center pb-2">
-                    Payment Details
-                  </div>
+      <div className="container custom_form mt-5">
+        <div className="row mt-0 mr-n4 ml-n4">
+          <div className="col-12">
+            <div className="container">
+              <div className="row justify-content-center  font-weight-bold h3 ">
+                <div className="col-12 mx-0  border-top-0 border-right-0 border-left-0  border-bottom text-center pb-2">
+                  Payment Details  <span className={statusCss}>{billInfo.status}</span>
                 </div>
-               
-                  <div className="row justify-content-center  mx-2">
-                    <div className="form-group col-md-6">
-                      <label className="">Patient Name :</label>
-                      <label className="ml-2"><b>{billInfo.patientName}</b></label>                      
-                    </div>
-
-                    <div className="form-group col-md-6">
-                      <label>Status :</label>
-                      <label  className="ml-2"><b><span className="badge badge-warning">{billInfo.status}</span></b></label>                      
-                    </div>
-
-                    <div className="form-group col-md-6">
-                      <label>Date Of Birth :</label>
-                      <label  className="ml-2"><b>{billInfo.dateOfBirth}</b></label>                      
-                    </div>
-
-                    <div className="form-group col-md-6">
-                      <label className="">Mobile No :</label>
-                      <label  className="ml-2"><b>{billInfo.mobile}</b></label>
-                   </div>
-
-                   <div className="form-group col-md-6">
-                      <label className="">Bill No :</label>
-                      <label  className="ml-2"><b>{billInfo.billNo}</b></label>
-                   </div>
-                   <div className="form-group col-md-6">
-                      <label className="">Test Date :</label>
-                      <label  className="ml-2"><b>{billInfo.testDate}</b></label>
-                   </div>
-                   <div className="form-group col-md-6">
-                      <label className="">Total Amount :</label>
-                      <label  className="ml-2"><b>{billInfo.totalAmount}</b></label>
-                   </div>
-                   <div className="form-group col-md-6">
-                   <div className="float-right">
-                      <button type="button" className="btn new_bnt_1 font-weight-bold " onClick={billPayment}> Pay  </button>
-                      </div>  
-                   </div>
-
-                 </div>
               </div>
+             
+                <div className="row justify-content-center  mx-2">
+                  <div className="form-group col-md-6">
+                    <label className="">Patient Name :</label>
+                    <label className="ml-2"><b>{billInfo.patientName}</b></label>                      
+                  </div>
+
+                  <div className="form-group col-md-6">
+                    <label>Status :</label>
+                    <label  className="ml-2"><b><span className={statusCss}>{billInfo.status}</span></b></label>                      
+                  </div>
+
+                  <div className="form-group col-md-6">
+                    <label>Date Of Birth :</label>
+                    <label  className="ml-2"><b>{ new Date( billInfo.dateOfBirth).toDateString() }</b></label>                      
+                  </div>
+
+                  <div className="form-group col-md-6">
+                    <label className="">Mobile No :</label>
+                    <label  className="ml-2"><b>{billInfo.mobile}</b></label>
+                 </div>
+
+                 <div className="form-group col-md-6">
+                    <label className="">Bill No :</label>
+                    <label  className="ml-2"><b>{billInfo.billNo}</b></label>
+                 </div>
+                 <div className="form-group col-md-6">
+                    <label className="">Test Date :</label>
+                    <label  className="ml-2"><b>{ new Date( billInfo.testDate).toDateString() }</b></label>
+                 </div>
+                 <div className="form-group col-md-6">
+                    <label className="">Total Amount :</label>
+                    <label  className="ml-2"><b>{billInfo.totalAmount}</b></label>
+                 </div>
+                 <div className="form-group col-md-6">
+                   {!billInfo.isPaid && 
+                    <div className="float-right">
+                    <button type="button" className="btn new_bnt_1 font-weight-bold " onClick={billPayment}> Pay  </button>
+                    </div> 
+                   }
+                 
+                 </div>
+
+               </div>
             </div>
           </div>
         </div>
       </div>
-
-   
-   
+    </div>   
+  
+      }
+      
     </div>
   );
 };

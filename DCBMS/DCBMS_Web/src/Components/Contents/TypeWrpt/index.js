@@ -20,25 +20,26 @@ let TypeWiseReport = (props) => {
 
   useEffect(() => {
     let loginToken = getCookie(process.env.REACT_APP_LOGIN_TOKEN_KEY);
-    if (loginToken) {
-      // routChange(`/test-type`);
-      console.log("Token Found", loginToken);
+    if (!loginToken) {
+      routChange(`/signin`);
+      return;
+      //console.log("Token Found", loginToken);
       //GetAllTestType();
     }
   }, []);
 
   let handleChange = ({ currentTarget: input }) => {
-    //console.log("input", input);
+    ////console.log("input", input);
 
     let newFilter = { ...Filter, [input.name]: input.value };
-    console.log("newTest", newFilter);
+    //console.log("newTest", newFilter);
     setFilter(newFilter);
   };
 
   const handleSubmit = (element) => {
     element.preventDefault();
 
-    console.log("signinObj", Filter);
+    //console.log("signinObj", Filter);
     let token = getCookie(process.env.REACT_APP_LOGIN_TOKEN_KEY);
     let httpRequest = {
       method: "post",
@@ -52,7 +53,7 @@ let TypeWiseReport = (props) => {
 
     httpSimpleRequest(httpRequest)
       .then((response) => {
-        console.log("response", response.data);
+        //console.log("response", response.data);
         if (response?.data) {
           //setTest({ testTypeName: "" });
           //GetAllTestType();
@@ -68,7 +69,7 @@ let TypeWiseReport = (props) => {
         }
       })
       .catch((error) => {
-        console.log("error", error);
+        //console.log("error", error);
         let notifyOptions = {
           title: "Error",
           message: "Incorrect username or password.",

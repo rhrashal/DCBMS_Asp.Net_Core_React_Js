@@ -10,7 +10,6 @@ let TestType = (props) => {
 
   let [allTest, setAllTest] = useState([
     { id: 1, testTypeName: "1st Type" },
-    { id: 2, testTypeName: "2st Type" },
   ]);
 
   let historyObj = useHistory();
@@ -20,16 +19,19 @@ let TestType = (props) => {
 
   useEffect(() => {
     let loginToken = getCookie(process.env.REACT_APP_LOGIN_TOKEN_KEY);
-    if (loginToken) {
-       routChange(`/test-type`);
-      console.log("Token Found", loginToken);
+    if (!loginToken) {
+       routChange(`/signin`);
+       return;
+      //console.log("Token not Found", loginToken);
        GetAllTestType();
     }
   }, []);
 
+
+
   let handleChange = ({ currentTarget: input }) => {
     let newTest = { ...test, [input.name]: input.value };
-    console.log("newTest", newTest);
+    //console.log("newTest", newTest);
     setTest(newTest);
   };
 
@@ -46,7 +48,7 @@ let TestType = (props) => {
       }
     }
 
-    console.log("signinObj", signinObj);
+    //console.log("signinObj", signinObj);
     let token = getCookie(process.env.REACT_APP_LOGIN_TOKEN_KEY);
     let httpRequest = {
       method: "post",
@@ -60,7 +62,7 @@ let TestType = (props) => {
 
     httpSimpleRequest(httpRequest)
       .then((response) => {
-        console.log("response", response.data);
+        //console.log("response", response.data);
         if (response?.data) {
           setTest({ testTypeName: "" });
            GetAllTestType();
@@ -76,7 +78,7 @@ let TestType = (props) => {
         }
       })
       .catch((error) => {
-        console.log("error", error);
+        //console.log("error", error);
         let notifyOptions = {
           title: "Error",
           message: "Incorrect username or password.",
@@ -99,7 +101,7 @@ let TestType = (props) => {
 
     httpSimpleRequest(httpRequest)
       .then((response) => {
-        console.log("response", response.data);
+        //console.log("response", response.data);
         if (response?.data) {
           setAllTest(response.data.results);
         } else {
@@ -112,7 +114,7 @@ let TestType = (props) => {
         }
       })
       .catch((error) => {
-        console.log("error", error);
+        //console.log("error", error);
         let notifyOptions = {
           title: "Error",
           message: "Incorrect username or password.",
@@ -123,7 +125,7 @@ let TestType = (props) => {
   };
 
   const DeleteTestType = (id) => {
-    console.log("Id", id);
+    //console.log("Id", id);
     if(id<1){
       return;
     }
@@ -142,7 +144,7 @@ let TestType = (props) => {
 
     httpSimpleRequest(httpRequest)
       .then((response) => {
-        console.log("response", response.data);
+        //console.log("response", response.data);
         if (response?.data) {
            GetAllTestType();
         } else {
@@ -155,7 +157,7 @@ let TestType = (props) => {
         }
       })
       .catch((error) => {
-        console.log("error", error);
+        //console.log("error", error);
         let notifyOptions = {
           title: "Error",
           message: "Incorrect username or password.",
@@ -224,6 +226,7 @@ let TestType = (props) => {
                     </tbody>
                   </table>
                 </div>
+              
               </div>
             </div>
           </div>

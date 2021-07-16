@@ -25,12 +25,14 @@ let TestSetup = (props) => {
 
   useEffect(() => {
     let loginToken = getCookie(process.env.REACT_APP_LOGIN_TOKEN_KEY);
-    if (loginToken) {
-      // routChange(`/admin/users`);
-      console.log("Token Found", loginToken);
-      GetAllTestType();
-      GetAllTests();
+    if (!loginToken) {
+      routChange(`/signin`);
+      return;
+      //console.log("Token Found", loginToken);
+      
     }
+    GetAllTestType();
+    GetAllTests();
   }, []);
 
   const GetAllTestType = () => {
@@ -46,7 +48,7 @@ let TestSetup = (props) => {
 
     httpSimpleRequest(httpRequest)
       .then((response) => {
-        console.log("response", response.data);
+        //console.log("response", response.data);
         if (response?.data) {
           setAllTestType(response.data.results);
         } else {
@@ -59,7 +61,7 @@ let TestSetup = (props) => {
         }
       })
       .catch((error) => {
-        console.log("error", error);
+        //console.log("error", error);
         let notifyOptions = {
           title: "Error",
           message: "Incorrect username or password.",
@@ -82,7 +84,7 @@ let TestSetup = (props) => {
 
     httpSimpleRequest(httpRequest)
       .then((response) => {
-        console.log("response", response.data);
+        //console.log("response", response.data);
         if (response?.data) {
           setAllTest(response.data.results);
         } else {
@@ -95,7 +97,7 @@ let TestSetup = (props) => {
         }
       })
       .catch((error) => {
-        console.log("error", error);
+        //console.log("error", error);
         let notifyOptions = {
           title: "Error",
           message: "Incorrect username or password.",
@@ -106,7 +108,7 @@ let TestSetup = (props) => {
   };
 
   const DeleteTest = (id) => {
-    console.log("Id", id);
+    //console.log("Id", id);
     if (id < 1) {
       return;
     }
@@ -125,7 +127,7 @@ let TestSetup = (props) => {
 
     httpSimpleRequest(httpRequest)
       .then((response) => {
-        console.log("response", response.data);
+        //console.log("response", response.data);
         if (response?.data) {
           GetAllTests();
         } else {
@@ -138,7 +140,7 @@ let TestSetup = (props) => {
         }
       })
       .catch((error) => {
-        console.log("error", error);
+        //console.log("error", error);
         let notifyOptions = {
           title: "Error",
           message: "Incorrect username or password.",
@@ -150,7 +152,7 @@ let TestSetup = (props) => {
 
   let handleChange = ({ currentTarget: input }) => {
     let newTest = { ...test, [input.name]: input.value };
-    console.log("newTest", newTest);
+    //console.log("newTest", newTest);
     setTest(newTest);
   };
 
@@ -167,7 +169,7 @@ let TestSetup = (props) => {
       }
     }
 
-    console.log("testObj", signinObj);
+    //console.log("testObj", signinObj);
     let token = getCookie(process.env.REACT_APP_LOGIN_TOKEN_KEY);
     let httpRequest = {
       method: "post",
@@ -181,7 +183,7 @@ let TestSetup = (props) => {
 
     httpSimpleRequest(httpRequest)
       .then((response) => {
-        console.log("response", response.data);
+        //console.log("response", response.data);
         if (response?.data) {
           setTest({ id: 0, testName: "", fee: 0.0, testTypeId: 0 });
           GetAllTests();
@@ -189,7 +191,7 @@ let TestSetup = (props) => {
         }
       })
       .catch((error) => {
-        console.log("error", error);
+        //console.log("error", error);
         let notifyOptions = {
           title: "Error",
           message: "Incorrect username or password.",

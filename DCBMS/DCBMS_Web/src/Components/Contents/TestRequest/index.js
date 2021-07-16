@@ -67,11 +67,12 @@ let TestRequest = (props) => {
 
   useEffect(() => {
     let loginToken = getCookie(process.env.REACT_APP_LOGIN_TOKEN_KEY);
-    if (loginToken) {
-      // routChange(`/admin/users`);
-      console.log("Token Found", loginToken);
-      GetAllTests();
+    if (!loginToken) {
+      routChange(`/signin`);
+      return;
+      //console.log("Token Found", loginToken);      
     }
+    GetAllTests();
   }, []);
 
   const GetAllTests = () => {
@@ -87,10 +88,10 @@ let TestRequest = (props) => {
 
     httpSimpleRequest(httpRequest)
       .then((response) => {
-        console.log("response", response.data);
+        //console.log("response", response.data);
         if (response?.data) {
           setAllTest(response.data.results);
-          console.log(response.data.results);
+          //console.log(response.data.results);
         } else {
           let notifyOptions = {
             title: "Error",
@@ -101,7 +102,7 @@ let TestRequest = (props) => {
         }
       })
       .catch((error) => {
-        console.log("error", error);
+        //console.log("error", error);
         let notifyOptions = {
           title: "Error",
           message: "Incorrect username or password.",
@@ -112,17 +113,17 @@ let TestRequest = (props) => {
   };
 
   let handleChange = ({ currentTarget: input }) => {
-    //console.log("input", input.name, input.value);
+    ////console.log("input", input.name, input.value);
     let newTest = { ...request, [input.name]: input.value };
 
-    console.log("newTest", newTest);
+    //console.log("newTest", newTest);
     setRequest(newTest);
     if (input.name == "testId") {
       allTest.filter((item, newIndex) => {
         if (item.id == input.value) {
-          //console.log(item);
+          ////console.log(item);
           let newReq = { ...newTest, payableAmount: item.fee };
-          // console.log("newReq", newReq);
+          // //console.log("newReq", newReq);
           setRequest(newReq);
           //request.payableAmount = item.fee;
           //setRequest(request);
@@ -133,7 +134,7 @@ let TestRequest = (props) => {
 
   const addTest = (element) => {
     element.preventDefault();
-    console.log(request.testId);
+    //console.log(request.testId);
     allTest.filter((item, newIndex) => {
       if (item.id == request.testId) {
         request.testRequestList.push({
@@ -151,7 +152,7 @@ let TestRequest = (props) => {
   const handleSubmit = (element) => {
     element.preventDefault();
 
-    console.log("request", request);
+    //console.log("request", request);
     let token = getCookie(process.env.REACT_APP_LOGIN_TOKEN_KEY);
     let httpRequest = {
       method: "post",
@@ -165,13 +166,13 @@ let TestRequest = (props) => {
 
     httpSimpleRequest(httpRequest)
       .then((response) => {
-        console.log("response", response.data);
+        //console.log("response", response.data);
         if (response?.data) {
           setResponseRequest(response.data.results);
         }
       })
       .catch((error) => {
-        console.log("error", error);
+        //console.log("error", error);
         let notifyOptions = {
           title: "Error",
           message: "Incorrect username or password.",
@@ -288,7 +289,9 @@ let TestRequest = (props) => {
                   </div>
                   {/* <div className="row  mx-2"></div> */}
                 </form>
+                { request.testRequestList.length>0 && 
                 <div className="row justify-content-center border mt-5">
+                  
                   <table className="table mx-2 my-2 table-bordered">
                     <thead className="thead-light">
                       <tr>
@@ -314,103 +317,106 @@ let TestRequest = (props) => {
                       })}
                     </tbody>
                   </table>
-                  {/* {()=>{
-                    if(request.testRequestList.length>0){
-                  return(
+                  
                     <div className="form-group col-md-12">
                     <div className="float-right">
                       <button  type="button" className="btn new_bnt_1 font-weight-bold mt-4" onClick={handleSubmit} >Save</button>
                     </div>
                   </div>
-                  )
-                    }
-                  }} */}
-                  <div className="form-group col-md-12">
+                  
+               
+                  {/* <div className="form-group col-md-12">
                     <div className="float-right">
                       <button  type="button" className="btn new_bnt_1 font-weight-bold mt-4" onClick={handleSubmit} >Save</button>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
+}
               </div>
             </div>
           </div>
         </div>
       </div>
+{responseRequest.id>0 && 
 
-      <div className="col-12 col-md-12 col-xl-10 col-lg-10 col-sm-12">
-        <div className="container custom_form mt-5">
-          <div className="row mt-0 mr-n4 ml-n4">
-            <div className="col-12">
-              <div className="container">
-                <div className="row justify-content-center  font-weight-bold h3 ">
-                  <div className="col-12 mx-0  border-top-0 border-right-0 border-left-0  border-bottom text-center pb-2">
-                    Patient Details
-                  </div>
-                </div>
-               
-                  <div className="row justify-content-center  mx-2">
-                    <div className="form-group col-md-6">
-                      <label className="">Patient Name :</label>
-                      <label className="ml-2"><b>{responseRequest.patientName}</b></label>                      
-                    </div>
-
-                    <div className="form-group col-md-6">
-                      <label>Date Of Birth :</label>
-                      <label  className="ml-2"><b>{responseRequest.dateOfBirth}</b></label>                      
-                    </div>
-
-                    <div className="form-group col-md-6">
-                      <label className="">Mobile No :</label>
-                      <label  className="ml-2"><b>{responseRequest.mobile}</b></label>
-                   </div>
-
-                   <div className="form-group col-md-6">
-                      <label className="">Bill No :</label>
-                      <label  className="ml-2"><b>{responseRequest.billNo}</b></label>
-                   </div>
-                   <div className="form-group col-md-6">
-                      <label className="">Test Date :</label>
-                      <label  className="ml-2"><b>{responseRequest.testDate}</b></label>
-                   </div>
-                   <div className="form-group col-md-6">
-                      <label className="">Total Amount :</label>
-                      <label  className="ml-2"><b>{responseRequest.totalAmount}</b></label>
-                   </div>
-                 </div>
-    
-                <div className="row justify-content-center border mt-5">
-                  <table className="table mx-2 my-2 table-bordered">
-                    <thead className="thead-light">
-                      <tr>
-                        <th scope="col">SL</th>
-                        <th scope="col">Test Name</th>
-                        <th scope="col">Fee</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {responseRequest.testRequestList.map((item, index) => {
-                        if (item.testName == "") {
-                          return;
-                        } else {
-                          return (
-                            <tr key={index}>
-                              {/* <td scope="row">{item.id}</td> */}
-                              <th scope="row">{index+1}</th>
-                              <td scope="row">{item.testName}</td>
-                              <td scope="row">{item.payableAmount}</td>
-                            </tr>
-                          );
-                        }
-                      })}
-                    </tbody>
-                  </table>                
-                </div>
-              </div>
-            </div>
+<div className="col-12 col-md-12 col-xl-10 col-lg-10 col-sm-12">
+<div className="container custom_form mt-5">
+  <div className="row mt-0 mr-n4 ml-n4">
+    <div className="col-12">
+      <div className="container">
+        <div className="row justify-content-center  font-weight-bold h3 ">
+          <div className="col-12 mx-0  border-top-0 border-right-0 border-left-0  border-bottom text-center pb-2">
+            Patient Details  <span className="badge badge-warning">{responseRequest.status}</span>
           </div>
         </div>
-      </div>
+       
+          <div className="row justify-content-center  mx-2">
+            <div className="form-group col-md-6">
+              <label className="">Patient Name :</label>
+              <label className="ml-2"><b>{responseRequest.patientName}</b></label>                      
+            </div>
 
+            <div className="form-group col-md-6">
+              <label>Date Of Birth :</label>
+              <label  className="ml-2"><b>{responseRequest.dateOfBirth}</b></label>                      
+            </div>
+
+            <div className="form-group col-md-6">
+              <label className="">Mobile No :</label>
+              <label  className="ml-2"><b>{responseRequest.mobile}</b></label>
+           </div>
+
+           <div className="form-group col-md-6">
+              <label className="">Bill No :</label>
+              <label  className="ml-2"><b>{responseRequest.billNo}</b></label>
+           </div>
+           <div className="form-group col-md-6">
+              <label className="">Test Date :</label>
+              <label  className="ml-2"><b>{responseRequest.testDate}</b></label>
+           </div>
+           <div className="form-group col-md-6">
+              <label className="">Total Amount :</label>
+              <label  className="ml-2"><b>{responseRequest.totalAmount}</b></label>
+           </div>
+                     
+         </div>
+
+        <div className="row justify-content-center border mt-5">
+          <table className="table mx-2 my-2 table-bordered">
+            <thead className="thead-light">
+              <tr>
+                <th scope="col">SL</th>
+                <th scope="col">Test Name</th>
+                <th scope="col">Fee</th>
+              </tr>
+            </thead>
+            <tbody>
+              {responseRequest.testRequestList.map((item, index) => {
+                if (item.testName == "") {
+                  return;
+                } else {
+                  return (
+                    <tr key={index}>
+                      {/* <td scope="row">{item.id}</td> */}
+                      <th scope="row">{index+1}</th>
+                      <td scope="row">{item.testName}</td>
+                      <td scope="row">{item.payableAmount}</td>
+                    </tr>
+                  );
+                }
+              })}
+            </tbody>
+          </table>                
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+
+}
+     
     </div>
   );
 };

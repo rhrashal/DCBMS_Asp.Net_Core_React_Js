@@ -13,12 +13,14 @@ const Header = () => {
     routChange(`/`);
   };
 
+  
+
   return (
     <div className="container-fluid">
       <div className="row navbar navbar-expand-lg navbar-light bg-light p-2 shadow bg-light rounded">
         <div className="col-auto mr-auto float-left">
           <div>
-            <NavLink className="navbar-brand" to="/">
+            <NavLink className="navbar-brand" to="/home">
               Home
             </NavLink>
           </div>
