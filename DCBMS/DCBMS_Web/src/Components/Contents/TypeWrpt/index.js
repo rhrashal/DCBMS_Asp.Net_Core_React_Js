@@ -4,6 +4,7 @@ import { httpSimpleRequest } from "../../Utils/httpClient";
 import { setCookie, getCookie, deleteCookie } from "../../Utils/cookies";
 import { TextInput, InputForDate } from "../../Form";
 import "react-datepicker/dist/react-datepicker.css";
+import GenerateFile from "../JsPdf";
 
 let TypeWiseReport = (props) => {
   let [Filter, setFilter] = useState({
@@ -79,6 +80,22 @@ let TypeWiseReport = (props) => {
       });
   };
 
+  const pdfDataHeader = ()=>{
+    let headar =[ ["SL No","Test Type Name","Total Test","Total Amount"]];
+    return headar;
+  }
+  
+  
+  const pdfDataBody = ()=>{
+    let body  = []
+    allTest.map((item,index)=>{
+      let newBody = [(index+1).toString(), item.testTypeName,item.noOfTest.toString(),item.totalAmount.toString()];
+      body.push(newBody);    
+    })
+    return body;
+  }
+
+
   return (
     <div className="row justify-content-center mt-5">
       <div className="col-12 col-md-12 col-xl-10 col-lg-10 col-sm-12">
@@ -144,9 +161,11 @@ let TypeWiseReport = (props) => {
                   {/* <div className="row mx-2 justify-content-center">
                     <div className="col-2 "></div>
                   </div> */}
-                </form>
-                <div className="row justify-content-center border mt-5">
-                  <table className="table mx-2 my-2 table-bordered">
+                        </form>
+                  {allTest.length>0 && 
+                  <div>
+                  <div className="row justify-content-center border mt-5">
+                      <table className="table mx-2 my-2 table-bordered">
                     <thead className="thead-light">
                       <tr>
                         <th scope="col">SL</th>
@@ -174,6 +193,15 @@ let TypeWiseReport = (props) => {
                     </tbody>
                   </table>
                 </div>
+                <div>
+                <GenerateFile  header={pdfDataHeader()} body={pdfDataBody()} />
+                </div>
+
+            </div>
+            }
+
+
+               
               </div>
             </div>
           </div>

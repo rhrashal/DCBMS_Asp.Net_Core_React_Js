@@ -34,13 +34,6 @@ const pdfDataBody = ()=>{
     body.push(newBody);    
   })
   return body;
-  // body: [
-  //       ["David", "david@example.com", "Sweden"],
-  //       ["Castille", "castille@example.com", "Spain"],
-  //       // ...
-  //     ]
-
-  //     return body
 }
 
   useEffect(() => {
@@ -170,7 +163,10 @@ const pdfDataBody = ()=>{
                     <div className="col-2 "></div>
                   </div> */}
                 </form>
-                <div className="row justify-content-center border mt-5">
+                {allTest.length>0 &&
+                <div>
+
+<div className="row justify-content-center border mt-5">
                   <table className="table mx-2 my-2 table-bordered">
                     <thead className="thead-light">
                       <tr>
@@ -202,6 +198,11 @@ const pdfDataBody = ()=>{
                 <div>
                 <GenerateFile  header={pdfDataHeader()} body={pdfDataBody()} />
                 </div>
+
+                </div>
+
+                }
+               
               </div>
             </div>
           </div>

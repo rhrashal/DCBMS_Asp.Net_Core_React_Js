@@ -4,6 +4,7 @@ import { httpSimpleRequest } from "../../Utils/httpClient";
 import { setCookie, getCookie, deleteCookie } from "../../Utils/cookies";
 import { TextInput, InputForDate } from "../../Form";
 import "react-datepicker/dist/react-datepicker.css";
+import GenerateFile from "../JsPdf";
 
 let UnPaidReport = (props) => {
   let [Filter, setFilter] = useState({
@@ -78,6 +79,23 @@ let UnPaidReport = (props) => {
         // notifications(notifyOptions);
       });
   };
+
+
+  const pdfDataHeader = ()=>{
+    let headar =[ ["SL No","Bill No","Contact", "Patient Name","Bill Amount"]];
+    return headar;
+  }
+  
+  
+  const pdfDataBody = ()=>{
+    let body  = []
+    allTest.map((item,index)=>{
+      let newBody = [(index+1).toString(), item.billNo,item.mobile,item.patientName,item.totalAmount.toString()];
+      body.push(newBody);    
+    })
+    return body;
+  }
+
 
   return (
     <div className="row justify-content-center mt-5">
@@ -176,6 +194,10 @@ let UnPaidReport = (props) => {
                     </tbody>
                   </table>
                 </div>
+                <div>
+                <GenerateFile  header={pdfDataHeader()} body={pdfDataBody()} />
+                </div>
+
               </div>
             </div>
           </div>
