@@ -22,9 +22,9 @@ let TestType = (props) => {
     if (!loginToken) {
        routChange(`/signin`);
        return;
-      //console.log("Token not Found", loginToken);
-       GetAllTestType();
+      //console.log("Token not Found", loginToken);      
     }
+    GetAllTestType();
   }, []);
 
 
