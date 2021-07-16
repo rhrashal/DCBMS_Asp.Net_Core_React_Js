@@ -163,7 +163,10 @@ let UnPaidReport = (props) => {
                     <div className="col-2 "></div>
                   </div> */}
                 </form>
-                <div className="row justify-content-center border mt-5">
+
+                  {allTest.length>0 && 
+                  <div>
+ <div className="row justify-content-center border mt-5">
                   <table className="table mx-2 my-2 table-bordered">
                     <thead className="thead-light">
                       <tr>
@@ -198,6 +201,11 @@ let UnPaidReport = (props) => {
                 <GenerateFile  header={pdfDataHeader()} body={pdfDataBody()} />
                 </div>
 
+                  </div>
+                  }
+
+
+               
               </div>
             </div>
           </div>

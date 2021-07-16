@@ -161,7 +161,7 @@ let TypeWiseReport = (props) => {
                   {/* <div className="row mx-2 justify-content-center">
                     <div className="col-2 "></div>
                   </div> */}
-                        </form>
+               </form>
                   {allTest.length>0 && 
                   <div>
                   <div className="row justify-content-center border mt-5">
