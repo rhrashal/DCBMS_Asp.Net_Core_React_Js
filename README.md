@@ -11,3 +11,7 @@
   ## step 2 : run npm install in console
   ## step 3 : run npm start in console
 
+
+# Credentials
+  ## ID : admin
+  ## Password : 1234
